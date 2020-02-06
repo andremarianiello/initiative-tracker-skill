@@ -1,4 +1,5 @@
 from mycroft import MycroftSkill, intent_file_handler
+from mycroft.util.parse import extract_number
 
 
 class InitiativeTracker(MycroftSkill):
@@ -13,18 +14,27 @@ class InitiativeTracker(MycroftSkill):
             name = name[:-2]
         return name
 
+    def _get_initiative(cls, message):
+        initiative = message.data.get('initiative')
+        return extract_number(initiative)
+
     @intent_file_handler('add.to.initiative.intent')
     def handle_add_character(self, message):
         character = self._get_character(message)
-        initiative = message.data.get('initiative')
-        self.initiative_order[character] = int(initiative)
-        self.log.debug("initiative", self.initiative_order)
-        self.log.debug(self.initiative_order)
+        initiative = self._get_initiative(message)
+        if initiative is None:
+            self.speak_dialog('invalid.initiative.dialog', data={
+                'character': character
+            })
+        else:
+            self.initiative_order[character] = initiative
+            self.log.debug("initiative", self.initiative_order)
+            self.log.debug(self.initiative_order)
 
-        self.speak_dialog('added.to.initiative', data={
-            'character': character,
-            'initiative': initiative
-        })
+            self.speak_dialog('added.to.initiative', data={
+                'character': character,
+                'initiative': initiative
+            })
 
     @intent_file_handler('remove.from.initiative.intent')
     def handle_remove_character(self, message):
