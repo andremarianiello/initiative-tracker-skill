@@ -1,4 +1,5 @@
 from mycroft import MycroftSkill, intent_file_handler
+from mycroft.util.parse import extract_number
 
 
 class InitiativeTracker(MycroftSkill):
@@ -6,10 +7,15 @@ class InitiativeTracker(MycroftSkill):
         MycroftSkill.__init__(self)
         self.initiative_order = dict()
 
+    @classmethod
+    def _get_initiative(cls, message):
+        initiative = message.data.get('initiative')
+        return extract_number(initiative)
+
     @intent_file_handler('add.to.initiative.intent')
     def handle_add_character(self, message):
         character = message.data.get('character')
-        initiative = message.data.get('initiative')
+        initiative = self._get_initiative(message)
         self.initiative_order[character] = int(initiative)
         self.log.debug("initiative", self.initiative_order)
         self.log.debug(self.initiative_order)
