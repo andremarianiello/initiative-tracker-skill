@@ -1,0 +1,4 @@
+make {character} the current combatant
+{character} is the current combatant
+it (is|should be) {character} turn
+{character} should (go|be going) now
