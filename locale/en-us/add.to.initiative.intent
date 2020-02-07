@@ -1,3 +1,4 @@
-(Add |) {character} (to |) initiative (with | at |) {initiative}
+add {character} to the initiative (order |) at {initiative}
+add {character} with intiative {initiative}
 {character} has initiative {initiative}
 Initiative for {character} is {initiative}
